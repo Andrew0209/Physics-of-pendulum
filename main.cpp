@@ -8,7 +8,11 @@ using namespace sf;
 using namespace std;
 #define PI acos(-1)
 
+void MathPendum();
+void SpringPendum();
+
 int main() {
+	//MathPendum();
 	const int ImageWidth = 1000, ImageHeight = 1000;
 	RenderWindow window1(VideoMode(ImageWidth, ImageHeight), L"pendulum", Style::Default);
 	window1.setVerticalSyncEnabled(true);
@@ -16,7 +20,6 @@ int main() {
 	CircleShape Body(R);
 	Body.setFillColor(Color::Cyan);
 	//window1.clear(Color(0xFFFFFFFF));	
-	
 	// math pendum angle sol
 	double Scale = 10;
 	double l = 40;
@@ -26,16 +29,20 @@ int main() {
 	double angle = PI / 2, AngleVelocity = 0.0, b = gMod / l * sin(angle);
 	Vec Position = Vec(sin(angle), cos(angle), 0) * -l;
 	double time = 0;
+	double startEnergy = (AngleVelocity * AngleVelocity * l / 2 + gMod * (1 - cos(angle)));
 	while (true) {
 		if (abs(AngleVelocity) < 0.005 && Position.x < 0) {
 			cout << "Period: " << t - time << '\n';
 			time = t;
 		}
+		//cout << "Energy: " << (AngleVelocity * AngleVelocity * l / 2 + gMod * (1 - cos(angle))) << '\n';
 		angle += AngleVelocity * dt + b * dt * dt / 2;
 		b = -gMod / l * sin(angle);
 		AngleVelocity = AngleVelocity + b * dt;
+		double energy = (AngleVelocity * AngleVelocity * l / 2 + gMod * (1 - cos(angle)));
+		if (energy < startEnergy)
+			AngleVelocity = sqrt(2 * (startEnergy - gMod * (1 - cos(angle))) / l) * (AngleVelocity < 0 ? -1 : 1);
 		Position = Vec(sin(angle), cos(angle), 0) * -l;
-		//cout << AngleVelocity << '\n';
 		t += dt;
 		int xPos = -Scale * Position.x + ImageWidth / 2;
 		int yPos = -Scale * Position.y + ImageHeight / 2 - l * Scale / 2;
@@ -44,8 +51,8 @@ int main() {
 			Vertex(Vector2f(ImageWidth / 2, ImageHeight / 2 - l * Scale / 2), Color::Blue),
 			Vertex(Vector2f(xPos + R, yPos + R), Color::Red)
 		};
-		Body.setPosition(xPos,yPos);
 		window1.clear(Color(0xAAAAAAFF));
+		Body.setPosition(xPos,yPos);
 		window1.draw(line, 4, sf::Lines);
 		window1.draw(Body);
 		window1.display();
@@ -57,7 +64,8 @@ void MathPendum() {
 	const int ImageWidth = 1000, ImageHeight = 1000;
 	RenderWindow window1(VideoMode(ImageWidth, ImageHeight), L"pendulum", Style::Default);
 	window1.setVerticalSyncEnabled(true);
-	CircleShape Body(5);
+	const int R = 5;
+	CircleShape Body(R);
 	Body.setFillColor(Color(0x555555FF));
 	//window1.clear(Color(0xAAAAAAFF));	
 	// math pendum regular sol
@@ -85,8 +93,14 @@ void MathPendum() {
 		double Scale = 10;
 		int xPos = -Scale * Position.x + ImageWidth / 2;
 		int yPos = -Scale * Position.y + ImageHeight / 2;
-		Body.setPosition(xPos, yPos);
+		Vertex line[] =
+		{
+			Vertex(Vector2f(ImageWidth / 2, ImageHeight / 2 - l * Scale / 2), Color::Blue),
+			Vertex(Vector2f(xPos + R, yPos + R), Color::Red)
+		};
 		window1.clear(Color(0xAAAAAAFF));
+		Body.setPosition(xPos, yPos);
+		window1.draw(line, 4, sf::Lines);
 		window1.draw(Body);
 		window1.display();
 	}
