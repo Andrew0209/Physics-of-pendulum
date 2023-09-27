@@ -14,8 +14,9 @@ double angleVec(Vec& v1, Vec& v2) {
 double angleVecCos(Vec& v1, Vec& v2) {
 	return ((dotProduct(v1, v2)) / (v1.module() * v2.module()));
 }
+
+// maybe rewrite it with vector protact
 double angleVecSin(Vec& v1, Vec& v2) {
 	double angleCos = angleVecCos(v1, v2);
 	return sqrt(1 - angleCos * angleCos);
-
 }
