@@ -12,33 +12,37 @@ int main() {
 	const int ImageWidth = 1000, ImageHeight = 1000;
 	RenderWindow window1(VideoMode(ImageWidth, ImageHeight), L"pendulum", Style::Default);
 	window1.setVerticalSyncEnabled(true);
-	const int R = 20;
+	const int R = 5;
 	CircleShape Body(R);
-	Body.setFillColor(Color(0x555555FF));
-	window1.clear(Color(0xAAAAAAFF));	
+	Body.setFillColor(Color::Cyan);
+	//window1.clear(Color(0xFFFFFFFF));	
 	
 	// math pendum angle sol
+	double Scale = 10;
 	double l = 40;
 	Vec g(0, -9.8, 0);
 	double dt = 0.04, t = 0;
 	double gMod = g.module();
-	double angle = PI/2, AngleVelocity = 0.0, b = gMod / l;
+	double angle = PI / 2, AngleVelocity = 0.0, b = gMod / l * sin(angle);
 	Vec Position = Vec(sin(angle), cos(angle), 0) * -l;
-
+	double time = 0;
 	while (true) {
+		if (abs(AngleVelocity) < 0.005 && Position.x < 0) {
+			cout << "Period: " << t - time << '\n';
+			time = t;
+		}
+		angle += AngleVelocity * dt + b * dt * dt / 2;
 		b = -gMod / l * sin(angle);
 		AngleVelocity = AngleVelocity + b * dt;
-		angle += AngleVelocity * dt + b * dt * dt / 2;
 		Position = Vec(sin(angle), cos(angle), 0) * -l;
-		double Scale = 10;
 		//cout << AngleVelocity << '\n';
 		t += dt;
 		int xPos = -Scale * Position.x + ImageWidth / 2;
-		int yPos = -Scale * Position.y + ImageHeight / 2;
+		int yPos = -Scale * Position.y + ImageHeight / 2 - l * Scale / 2;
 		Vertex line[] =
 		{
-			Vertex(Vector2f(ImageWidth / 2, ImageHeight / 2)),
-			Vertex(Vector2f(xPos + R, yPos + R))
+			Vertex(Vector2f(ImageWidth / 2, ImageHeight / 2 - l * Scale / 2), Color::Blue),
+			Vertex(Vector2f(xPos + R, yPos + R), Color::Red)
 		};
 		Body.setPosition(xPos,yPos);
 		window1.clear(Color(0xAAAAAAFF));
