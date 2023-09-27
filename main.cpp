@@ -24,14 +24,14 @@ int main() {
 	double Scale = 10;
 	double l = 40;
 	Vec g(0, -9.8, 0);
-	double dt = 0.04, t = 0;
+	double dt = 0.00001, t = 0;
 	double gMod = g.module();
 	double angle = PI / 2, AngleVelocity = 0.0, b = gMod / l * sin(angle);
 	Vec Position = Vec(sin(angle), cos(angle), 0) * -l;
 	double time = 0;
 	double startEnergy = (AngleVelocity * AngleVelocity * l / 2 + gMod * (1 - cos(angle)));
 	while (true) {
-		if (abs(AngleVelocity) < 0.005 && Position.x < 0) {
+		if (abs(AngleVelocity) < dt / 5 && Position.x < 0 && t - time > 10 * dt) {
 			cout << "Period: " << t - time << '\n';
 			time = t;
 		}
@@ -51,11 +51,13 @@ int main() {
 			Vertex(Vector2f(ImageWidth / 2, ImageHeight / 2 - l * Scale / 2), Color::Blue),
 			Vertex(Vector2f(xPos + R, yPos + R), Color::Red)
 		};
-		window1.clear(Color(0xAAAAAAFF));
-		Body.setPosition(xPos,yPos);
-		window1.draw(line, 4, sf::Lines);
-		window1.draw(Body);
-		window1.display();
+		if (int(t / dt) % int(0.05 / dt) == 0) {
+			window1.clear(Color(0xAAAAAAFF));
+			Body.setPosition(xPos, yPos);
+			window1.draw(line, 4, sf::Lines);
+			window1.draw(Body);
+			window1.display();
+		}
 	}
 
 
