@@ -37,7 +37,7 @@ int main() {
 	
 	// rewrite it so angle velocity and angle axceleration are vectors
 	// 
-	// math pendum angle sol
+	// math pendulum angle sol
 	double Scale = 10; // scale between picture and coordinates
 	double l = 40; // string length
 	Vec g(0, -9.8, 0); 
@@ -112,7 +112,7 @@ void MathPendulum() {
 	CircleShape Body(R);
 	Body.setFillColor(Color(0x555555FF));
 	//window1.clear(Color(0xAAAAAAFF));	
-	// math pendum regular sol
+	// math pendulum regular sol
 	double l = 30;
 	Vec Position(0, -l, 0);
 	Vec Velocity(20, 0, 0);
@@ -151,7 +151,7 @@ void MathPendulum() {
 }
 
 void SpringPendulum() {
-	// Simpliest pendum wich has analitic solution
+	// Simpliest pendulum wich has analitic solution
 	const int ImageWidth = 1000, ImageHeight = 1000;
 	RenderWindow window1(VideoMode(ImageWidth, ImageHeight), L"pendulum", Style::Titlebar);
 	window1.setVerticalSyncEnabled(true);
@@ -163,7 +163,7 @@ void SpringPendulum() {
 	double dt = 0.04, t = 0;
 	Vec a(0, 0, 0);
 	Vec Start = Position;
-	// spring pendum 
+	// spring pendulum 
 	while (true) {
 		a = (Start - Position) * 4;
 		Position = Position + Velocity * dt + (a * dt * dt) / 2;
